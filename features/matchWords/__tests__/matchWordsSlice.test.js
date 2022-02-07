@@ -1,24 +1,34 @@
-import reducer, { add, remove } from "../matchWordsSlice";
+import reducer, { add, phraseStatusTypes, remove } from "../matchWordsSlice";
 
+const initialState = {
+  initialPhrase: [],
+  currentPhrase: [],
+  phrasesArray: [],
+  shuffledPhrase: [],
+  userSubmission: [],
+  phraseStatus: phraseStatusTypes.notCompleted,
+  currentWordIndex: 0,
+  currentPhraseIndex: 0,
+};
 describe("match words reducer", () => {
   it("should return the initial state", () => {
-    expect(reducer(undefined, {})).toEqual({
-      initialPhrase: [],
-      shuffledPhrase: [],
-      userSubmission: [],
-      completed: false,
-    });
+    expect(reducer(undefined, {})).toEqual(initialState);
   });
 
   it("should add a word to the userSubmission array", () => {
-    const previousState = {
-      initialPhrase: ["I", "brush", "my", "teeth."],
-      userSubmission: [],
-    };
-    expect(reducer(previousState, add("word"))).toEqual({
-      initialPhrase: ["I", "brush", "my", "teeth."],
-      userSubmission: ["word"],
-    });
+    const previousState = initialState;
+    (previousState.initialPhrase = ["I", "brush", "my", "teeth."]),
+      expect(reducer(previousState, add("I"))).toEqual({
+        initialPhrase: ["I", "brush", "my", "teeth."],
+        currentPhrase: [],
+        phrasesArray: [],
+        shuffledPhrase: [],
+        userSubmission: [],
+        phraseStatus: phraseStatusTypes.notCompleted,
+        currentWordIndex: 0,
+        currentPhraseIndex: 0,
+        userSubmission: ["I"],
+      });
   });
 
   it("should remove a word from the userSubmition array", () => {
@@ -31,4 +41,6 @@ describe("match words reducer", () => {
       userSubmission: ["word", "no", "yes"],
     });
   });
+
+  
 });

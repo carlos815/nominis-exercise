@@ -29,6 +29,7 @@ export default class WordGameController {
   );
 
   async startWordGame() {
+    //Here's where you fetch a new word
     this.dispatch(setNewWordGame(this.phrasesArray));
     this.dispatch(game.startGame());
   }
@@ -46,7 +47,6 @@ export default class WordGameController {
   trySubmitWord(word, userSubmission, initialPhrase) {
     if (this.#isRightWord(word, userSubmission, initialPhrase)) {
       this.dispatch(add(word));
-      this.currentWordIndex++;
       return wordSubmitStatus.completed;
     } else {
       this.dispatch(game.decrementLives());
