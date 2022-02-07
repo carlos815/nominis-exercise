@@ -11,8 +11,20 @@ import WordGameController, {
 } from "../features/wordGameController";
 import { phraseStatusTypes } from "../features/matchWords/matchWordsSlice";
 import { Desktop, Mobile } from "../components/Responsive";
+import { getDataWordGame } from "../fetchData/getDataWordGame";
 
-export default function Home() {
+export async function getStaticProps() {
+  const wordsGameData = await getDataWordGame();
+  return {
+    props: {
+      wordsGameData,
+    },
+    revalidate: 43200, //12 hours
+  };
+}
+
+export default function Home({ wordsGameData }) {
+  console.log(wordsGameData);
   const dispatch = useDispatch();
   const initialPhrase = useSelector((state) => state.matchWords.initialPhrase);
   const gameStatus = useSelector((state) => state.game.gameStatus);
@@ -20,13 +32,14 @@ export default function Home() {
     (state) => state.matchWords.shuffledPhrase
   );
   const phraseStatus = useSelector((state) => state.matchWords.phraseStatus);
+  const phrasesArray = useSelector((state) => state.matchWords.phrasesArray);
   const currentPhraseIndex = useSelector(
     (state) => state.matchWords.currentPhraseIndex
   );
   const gameController = new WordGameController();
 
   useEffect(() => {
-    gameController.startWordGame();
+    gameController.startWordGame(wordsGameData);
   }, []);
 
   useEffect(() => {
@@ -34,7 +47,10 @@ export default function Home() {
       phraseStatus == phraseStatusTypes.completed &&
       initialPhrase.length != 0
     ) {
-      const nextGameStatus = gameController.tryNextPhrase(currentPhraseIndex);
+      const nextGameStatus = gameController.tryNextPhrase(
+        currentPhraseIndex,
+        phrasesArray
+      );
 
       if (nextGameStatus == wordGameStatus.completed) {
         dispatch(userWonGame());
@@ -43,7 +59,7 @@ export default function Home() {
   }, [phraseStatus]);
 
   const restartGame = () => {
-    gameController.startWordGame();
+    gameController.startWordGame(wordsGameData);
   };
 
   const Title = ({ className }) => {
@@ -141,7 +157,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-     <main className="p-6 relative min-h-screen ">
+      <main className="p-6 relative min-h-screen ">
         <RenderedScreen />
       </main>
 

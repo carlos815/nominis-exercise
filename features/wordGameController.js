@@ -24,19 +24,17 @@ export default class WordGameController {
 
   dispatch = useDispatch();
 
-  phrasesArray = ["I brush my teeth.", "My name is Carlos"].map((phrase) =>
-    phrase.split(" ")
-  );
+  phrasesArray = [];
 
-  async startWordGame() {
-    //Here's where you fetch a new word
+  async startWordGame(wordsGameData) {
+    this.phrasesArray = wordsGameData.words.map((phrase) => phrase.split(" "));
     this.dispatch(setNewWordGame(this.phrasesArray));
     this.dispatch(game.startGame());
   }
 
-  tryNextPhrase(currentPhraseIndex) {
+  tryNextPhrase(currentPhraseIndex, phrasesArray) {
     //const waitAnimationMs = 1000;
-    if (this.phrasesArray[currentPhraseIndex + 1] == undefined) {
+    if (phrasesArray[currentPhraseIndex + 1] == undefined) {
       return wordGameStatus.completed;
     } else {
       this.dispatch(nextPhrase());
