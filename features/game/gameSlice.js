@@ -1,10 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-//This one controls the global state of teh game
-//For now it only has a lives counter
+export const gameStatusTypes = {
+  playing: "playing",
+  idle: "idle",
+  win: "win",
+  lose: "lose",
+};
 const initialState = {
   lives: 5,
   livesTotal: 5,
+  gameStatus: gameStatusTypes.playing,
 };
 
 export const gameSlice = createSlice({
@@ -12,23 +17,38 @@ export const gameSlice = createSlice({
   initialState,
   reducers: {
     incrementLives: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
       state.lives += 1;
+      state.gameStatus = gameStatusTypes.playing;
     },
     decrementLives: (state) => {
       state.lives -= 1;
+      if (state.lives == 0) {
+        state.gameStatus = gameStatusTypes.lose;
+      }
     },
-    setInitialState: (state, action) => {
-      state.livesTotal = action.payload;
+    setLives: (state, action) => {
+      state.lives = action.payload;
+
+      if (state.lives != 0) {
+      }
+    },
+    userWonGame: (state) => {
+      state.gameStatus = gameStatusTypes.win;
+    },
+    startGame: (state) => {
+      state.gameStatus = gameStatusTypes.playing;
+      state.lives = state.livesTotal;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { incrementLives, decrementLives, setInitialState } =
-  gameSlice.actions;
+export const {
+  incrementLives,
+  decrementLives,
+  setLives,
+  userWonGame,
+  startGame,
+} = gameSlice.actions;
 
 export default gameSlice.reducer;

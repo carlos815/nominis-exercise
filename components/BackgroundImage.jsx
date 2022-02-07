@@ -18,13 +18,13 @@ export default function BackgroundImage() {
     return (
         <div className="fixed top-0 bottom-0 left-0 right-0 -z-10">
 
-            <div className="invisible xl:visible">
-                <Image src="/../public/desktop-background.png" height={1080} width={1920} layout="fill" objectFit="cover" />
+            <div className="hidden md:inline">
+                <Image src="/../public/desktop-background.png" layout="fill" objectFit="cover" />
             </div>
 
-            <div className="xl:invisible visible">
+            <div className="md:hidden inline">
 
-                <Image src="/../public/mobile-background.png" height={1365.33} width={768} layout="fill" objectFit="cover" />
+                <Image src="/../public/mobile-background.png" layout="fill" objectFit="cover" />
             </div>
         </div>
     );

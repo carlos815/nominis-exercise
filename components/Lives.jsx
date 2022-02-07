@@ -2,8 +2,6 @@ import Image from "next/image";
 import React from "react";
 import { useSelector } from "react-redux";
 
-
-
 export default function Lives() {
 
     const livesCount = useSelector((state) => state.game.lives);
@@ -33,6 +31,5 @@ function Hearts({ livesCount, livesTotal }) {
             )
         }
     }
-
     return hearts
 }

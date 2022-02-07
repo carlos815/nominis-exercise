@@ -1,51 +1,35 @@
-import { add, remove } from "../../features/matchWords/matchWordsSlice";
-import { decrementLives } from "../../features/game/gameSlice";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, } from "react-redux";
 import { useEffect, useState } from "react";
+import WordGameController, { wordSubmitStatus } from "../../features/wordGameController";
 
-export default function ClickableWord({ word, onClick }) {
-    const [isActive, setIsActive] = useState(true)
+export default function ClickableWord({ word }) {
+    const gameController = new WordGameController()
+
+    const [isButtonActive, setIsActive] = useState(false)
     const [hasError, setHasError] = useState(false)
     const userSubmission = useSelector((state) => state.matchWords.userSubmission);
     const initialPhrase = useSelector((state) => state.matchWords.initialPhrase);
 
-    const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log("LOG")
-    }, [])
+        if (userSubmission.length == 0) setIsActive(true)
+    }, [userSubmission])
 
     const handleClick = () => {
-        if (hasError) {
-            return
+
+        if (hasError || !isButtonActive) return
+        const submitWord = gameController.trySubmitWord(word, userSubmission, initialPhrase)
+
+        if (submitWord == wordSubmitStatus.completed) {
+            setIsActive(false)
         }
-        else if (isActive) {
-            submitWord()
+        else if (submitWord == wordSubmitStatus.failed) {
+            errorAnimation(750)
         } else {
             //Remove word option probably not necessary
             //removeWord()
         }
-    }
-
-    const submitWord = () => {
-        if (isRightWord()) {
-            dispatch(add(word))
-            setIsActive(false)
-        } else {
-            userMadeMistake()
-        }
-    }
-
-    const isRightWord = () => {
-        const indexOfSubmittedWord = userSubmission.length;
-        const indexOfCorrectWord = initialPhrase.indexOf(word);
-        return indexOfSubmittedWord == indexOfCorrectWord
-    }
-
-    const userMadeMistake = () => {
-        dispatch(decrementLives())
-        errorAnimation(750)
     }
 
     const errorAnimation = (ms) => {
@@ -55,15 +39,10 @@ export default function ClickableWord({ word, onClick }) {
         )
     }
 
-    const removeWord = () => {
-        dispatch(remove(word))
-        setIsActive(!isActive)
-    }
-
     return (
-        <button onClick={onClick} className={`
+        <button onClick={handleClick} className={`
          bg-gray-light rounded-lg p-4 h-14
-       shadow-md hover:scale-110 ${!isActive && "text-gray-medium "}  ${hasError ? "text-red animate-shake" : ""} transition-all duration-300 font-medium   `}>
+       shadow-md ${isButtonActive && "hover:scale-110" || "text-gray-medium"}  ${hasError ? "text-red animate-shake" : ""} transition-all duration-300 font-medium`}>
             {word}
         </button>
     );

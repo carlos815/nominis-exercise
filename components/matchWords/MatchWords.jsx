@@ -1,30 +1,20 @@
 import ClickableWord from "./ClickableWord";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import Image from "next/image";
-import { reset } from "../../features/matchWords/matchWordsSlice";
 
-export default function MatchWords({ wordsArray }) {
-    const [a, seta] = useState(
-        "a"
 
-    )
+export default function MatchWords({ wordsArray, className, gameController }) {
     const userSubmission = useSelector((state) => state.matchWords.userSubmission)
 
-    const dispatch = useDispatch()
-
     const handleResetBtnClick = () => {
-        dispatch(reset())
-
-        seta("b");
+        gameController.resetWord()
     }
 
     return (
-        <div className="font-medium flex flex-col gap-y-4">
+        <div className={`font-medium flex flex-col gap-y-4 ${className}`}>
             <button onClick={handleResetBtnClick} className="self-end flex "><Image src="/../public/retry.png" height={24} width={24}></Image></button>
             <div className="w-full bg-gray-light rounded-lg p-4 h-14 shadow-md " > {userSubmission?.join(" ")} </div>
-            <div className="flex flex-wrap gap-4 justify-center"> {wordsArray.map((word => <ClickableWord word={word} key={word} a={a} />))}</div>
+            <div className="flex flex-wrap gap-4 justify-center"> {wordsArray.map(((wordObject) => <ClickableWord word={wordObject.word} key={wordObject.index} index={wordObject.index} />))}</div>
         </div>
     );
 }

@@ -1,10 +1,12 @@
-import reducer, { add, remove, setInitialState } from "../matchWordsSlice";
+import reducer, { add, remove } from "../matchWordsSlice";
 
 describe("match words reducer", () => {
   it("should return the initial state", () => {
     expect(reducer(undefined, {})).toEqual({
       initialPhrase: [],
+      shuffledPhrase: [],
       userSubmission: [],
+      completed: false,
     });
   });
 
@@ -28,16 +30,5 @@ describe("match words reducer", () => {
       initialPhrase: ["I", "brush", "my", "teeth."],
       userSubmission: ["word", "no", "yes"],
     });
-  });
-
-  it("should set the initial state to the given array", () => {
-    const initialState = {
-      initialPhrase: ["this", "state", "initial", "state."],
-      userSubmission: ["word", "a", "b", "apple"],
-    };
-
-    expect(reducer(undefined, setInitialState(initialState))).toEqual(
-      initialState
-    );
   });
 });
