@@ -66,7 +66,7 @@ export default function Home({ wordsGameData }) {
     return (
       <div className={className}>
         <h1 className="text-4xl font-medium mb-3  md:text-5xl">
-          Let's Practice
+          {"Let's Practice"}
         </h1>
         <p className="text-xl md:text-3xl">
           Put the words in the right order to make a correct sentence.
